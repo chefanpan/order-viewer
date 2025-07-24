@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leitor QR Magalu</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    #output {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Leitor de QR Code - Magalu</h1>
+  <div id="reader"></div>
+  <div id="output">Aguardando leitura...</div>
+
+  <script>
+    function onScanSuccess(qrMessage) {
+      document.getElementById('output').innerText = `QR Lido: ${qrMessage}`;
+
+      // Aqui futuramente você pode chamar a API da Magalu com esse código
+      // Ex: buscarPedido(qrMessage);
+
+      // Parar leitura após 1 leitura bem-sucedida
+      html5QrCode.stop();
+    }
+
+    function onScanError(errorMessage) {
+      // erros de leitura podem ser ignorados para manter a leitura contínua
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    const config = { fps: 10, qrbox: 250 };
+
+    Html5Qrcode.getCameras().then(devices => {
+      if (devices && devices.length) {
+        html5QrCode.start(
+          { facingMode: "environment" }, // usa a câmera traseira
+          config,
+          onScanSuccess,
+          onScanError
+        );
+      } else {
+        document.getElementById('output').innerText = "Nenhuma câmera encontrada.";
+      }
+    });
+  </script>
+</body>
+</html>

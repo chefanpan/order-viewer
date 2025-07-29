@@ -29,16 +29,45 @@
   <div id="output">Aguardando leitura...</div>
 
   <script>
+    async function buscarPedido(orderId) {
+      try {
+        const response = await fetch("https://magalu-access-token.onrender.com/pedido", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ order_id: orderId })
+        });
+  
+        if (!response.ok) {
+          throw new Error("Erro ao buscar pedido");
+        }
+  
+        const pedido = await response.json();
+        document.getElementById('output').innerText =
+          `Cliente: ${pedido.customer.name}\nProdutos: ${pedido.items.map(p => p.name).join(", ")}`;
+      } catch (err) {
+        document.getElementById('output').innerText = "Erro: " + err.message;
+      }
+  }
     function onScanSuccess(qrMessage) {
-      document.getElementById('output').innerText = `QR Lido: ${qrMessage}`;
+    document.getElementById('output').innerText = `QR Lido: ${qrMessage}`;
 
-      // Aqui futuramente você pode chamar a API da Magalu com esse código
-      // Ex: buscarPedido(qrMessage);
-
-      // Parar leitura após 1 leitura bem-sucedida
-      html5QrCode.stop();
+    try {
+      const dados = JSON.parse(qrMessage);
+      const orderId = dados.order_id;
+      if (orderId) {
+        buscarPedido(orderId);
+      } else {
+        document.getElementById('output').innerText = "QR inválido: sem order_id";
+      }
+    } catch (e) {
+      document.getElementById('output').innerText = "QR inválido: não é JSON";
     }
 
+    html5QrCode.stop();
+  }
+    
     function onScanError(errorMessage) {
       // erros de leitura podem ser ignorados para manter a leitura contínua
     }

@@ -46,9 +46,9 @@
           //throw new Error("Erro ao buscar pedido");
         //}
   
-        const pedido = await response.json();
-        document.getElementById('output').innerText =
-          `Cliente: ${pedido.customer.name}\nProdutos: ${pedido.items.map(p => p.name).join(", ")}`;
+        //const pedido = await response.json();
+        //document.getElementById('output').innerText =
+          //`Cliente: ${pedido.customer.name}\nProdutos: ${pedido.items.map(p => p.name).join(", ")}`;
       } catch (err) {
         document.getElementById('output').innerText = "Erro: " + err.message;
       }

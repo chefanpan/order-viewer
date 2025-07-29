@@ -56,15 +56,21 @@
     try {
       const dados = JSON.parse(qrMessage);
       const orderId = dados.order_id;
+    
+      let output = `QR Lido:\n${qrMessage}`;
+    
       if (orderId) {
+        output += `\n\nOrder ID: ${orderId}`;
         buscarPedido(orderId);
       } else {
-        document.getElementById('output').innerText = "QR inválido: sem order_id";
+        output += `\n\nQR inválido: sem order_id`;
       }
+    
+      document.getElementById('output').innerText = output;
     } catch (e) {
-      document.getElementById('output').innerText = "QR inválido: não é JSON";
+      document.getElementById('output').innerText = `QR Lido:\n${qrMessage}\n\nQR inválido: não é JSON`;
     }
-
+      
     html5QrCode.stop();
   }
     

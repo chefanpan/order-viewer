@@ -38,10 +38,13 @@
           },
           body: JSON.stringify({ order_id: orderId })
         });
-  
-        if (!response.ok) {
-          throw new Error("Erro ao buscar pedido");
-        }
+
+        const conteudo = await response.text();  // Pega o conteúdo bruto da resposta
+        document.getElementById('output').innerText = `Status: ${response.status}\nResposta do Flask:\n${conteudo}`;
+        
+        //if (!response.ok) {
+          //throw new Error("Erro ao buscar pedido");
+        //}
   
         const pedido = await response.json();
         document.getElementById('output').innerText =
